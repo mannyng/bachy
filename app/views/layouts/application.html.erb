@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta content='<%= user_signed_in? ? current_user.id : "" %>' name='user-id'/>
+
+  <title>Biafra Chat</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag '//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+
+
+
+</head>
+
+<body>
+  <%= render 'layouts/nav' %>
+  <div class="container">
+    <div class = "row">
+      <div class=" col-sm-4 col-md-2">
+        <% if current_user.present? %>
+      <div class  = "onlineusers">
+          <%= render partial: 'users/onlineuser' %>
+        </div>
+    </div>
+    <% end  %>
+      <div class= "col-sm-8 col-md-10">
+        <% if alert %>
+        <div class="alert alert-danger" role="alert"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><%= notice %><%= alert %></div>
+        <% end %>
+        <% if notice %>
+        <div class="alert alert-success" role="alert"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><%= notice %>
+        </div>
+        <% end %>
+     <div id = "chatbox_parent">
+
+     </div>
+     <%= subscribe_to "/chatroom"  %>
+     <script>
+       PrivatePub.subscribe("/chatroom", function(data, channel)
+        {
+       var current_user_id = '#{current_user.try(:id)}';
+        if (data.receiver_id == current_user_id)
+         {
+           chatBox.chatWith(data.conversation_id);
+          }
+          else {
+            chatBox.chatWith(data.conversation_id);
+          }
+         });
+       </script>
+      <%= yield %>
+       </div>
+    </div>
+  </div>
+
+  <!-- <audio id="chatAudio"><source src="/sounds/notification.mp3" type="audio/mpeg"></audio> -->
+</body>
+
+</html>

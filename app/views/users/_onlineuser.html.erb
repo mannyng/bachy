@@ -1,0 +1,28 @@
+<!-- <script>
+function autoLoad() {
+	$("#onlineusers").load();
+}
+setInterval(autoLoad,1000)
+
+</script> -->
+
+
+ <div id = "onlineusers">
+	<nav class="nav-sidebar">
+	<h4>Online Users</h4>
+		<% if current_user.present? %>
+	<%= subscribe_to "users/onlineusers" %>
+	<ul class="nav" id = "users_list">
+		<% @onlineusers.each do  |user| %>
+		<li style="list-style-type: none;" class=".online_users"><%=link_to  user.name.titleize,"#",class: " btn-xs start-conversation",
+		"data-sid" => current_user.id, "data-rip" => user.id %></li>
+		<% end %>
+	</ul>
+	<% end %>
+</nav>
+</div>
+<script>
+		 PrivatePub.subscribe("users/onlineusers", function(){
+			alert('hi');
+		});
+</script>
